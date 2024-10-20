@@ -2,17 +2,12 @@ from tabulate import tabulate
 from datetime import date
 
 data_obat = [
-    # {"no": 1, "kode_obat": "OB-01", "nama": "Paracetamol", "harga": 7000, "jumlah": 100, "tgl_kadaluwarsa": date(2026, 8, 31)},
-    # {"no": 2, "kode_obat": "OB-02", "nama": "Lansoprazole", "harga": 15000, "jumlah": 55, "tgl_kadaluwarsa": date(2026, 12, 25)},
-    # {"no": 3, "kode_obat": "OB-03", "nama": "Naxprofen", "harga": 5000, "jumlah": 90, "tgl_kadaluwarsa": date(2025, 12, 30)},
-    # {"no": 4, "kode_obat": "OB-04", "nama": "Amoxicillin", "harga": 12500, "jumlah": 30, "tgl_kadaluwarsa": date(2025, 10, 30)},
-    # {"no": 5, "kode_obat": "OB-05", "nama": "Cetirizine", "harga": 8000, "jumlah": 65, "tgl_kadaluwarsa": date(2026, 7, 18)}
-#     {"no": 6, "kode_obat": "OB-06", "nama": "Vitamin C", "harga": 5000, "jumlah": 80, "tgl_kadaluwarsa": date(2025, 12, 30)},
-#     {"no": 7, "kode_obat": "OB-07", "nama": "Metmorfin", "harga": 6500, "jumlah": 75, "tgl_kadaluwarsa": date(2026, 10, 10)},
-#     {"no": 8, "kode_obat": "OB-08", "nama": "Asam Mefenamat", "harga": 9000, "jumlah": 40, "tgl_kadaluwarsa": date(2025, 12, 30)},
-#     {"no": 9, "kode_obat": 8, "nama": "Ibu Profen", "harga": 10000, "jumlah": 65, "tgl_kadaluwarsa": date(2026, 7, 18)},
-#     {"no": 10, "kode_obat": 9, "nama": "Furosemide", "harga": 7500, "jumlah": 70, "tgl_kadaluwarsa": date(2026, 3, 27)},
-#     {"no": 11, "kode_obat": 10, "nama": "Ranitidin", "harga": 11000, "jumlah": 82, "tgl_kadaluwarsa": date(2026, 6, 26)}
+    {"no": 1, "kode_obat": "OB-01", "nama": "Paracetamol", "harga": 7000, "jumlah": 100, "tgl_kadaluwarsa": date(2026, 8, 31)},
+    {"no": 2, "kode_obat": "OB-02", "nama": "Lansoprazole", "harga": 15000, "jumlah": 55, "tgl_kadaluwarsa": date(2026, 12, 25)},
+    {"no": 3, "kode_obat": "OB-03", "nama": "Naxprofen", "harga": 5000, "jumlah": 90, "tgl_kadaluwarsa": date(2025, 12, 30)},
+    {"no": 4, "kode_obat": "OB-04", "nama": "Amoxicillin", "harga": 12500, "jumlah": 30, "tgl_kadaluwarsa": date(2025, 10, 30)},
+    {"no": 5, "kode_obat": "OB-05", "nama": "Cetirizine", "harga": 8000, "jumlah": 65, "tgl_kadaluwarsa": date(2026, 7, 18)},
+    {"no": 6, "kode_obat": "OB-06", "nama": "Vitamin C", "harga": 5000, "jumlah": 80, "tgl_kadaluwarsa": date(2025, 12, 30)}
 ]
 
 keranjang_belanja = []
@@ -60,6 +55,14 @@ def validasi_nama():
             print("Input tidak boleh kosong.")
             continue
         return nama_input
+    
+def validasi_nama_beli():
+    while True:
+        nama_input = input("Masukkan nama obat yang ingin Anda beli: ").strip()
+        if not nama_input:
+            print("Input tidak boleh kosong.")
+            continue
+        return nama_input
 
 def validasi_harga():
     while True: 
@@ -74,7 +77,7 @@ def validasi_harga():
             else:
                 return harga_input
         except ValueError:
-            print("Input tidak valid. Harap masukkan angka bilgn bulat tanpa koma")
+            print("Input tidak valid. Harap masukkan bilangan bulat tanpa koma")
 
 def validasi_jumlah():
     while True:
@@ -137,6 +140,15 @@ def kurangi_stok():
                 obat["jumlah"] -= item[1]
     keranjang_belanja.clear()
 
+def confirm_menuutama():
+    while True:
+        confirm = input("Apakah Anda yakin ingin kembali ke menu utama? (ya/tidak): ").lower()
+        if confirm == "ya":
+            return True
+        elif confirm == "tidak":
+            return False
+        else:
+            print("Input tidak valid. Silahkan masukkan 'ya' atau 'tidak' ")
 def tampilkan_obat():
     while True:
         print("\n--------------- Submenu Tampilkan Obat (1) ---------------")
@@ -171,7 +183,7 @@ def tampilkan_obat():
                     print("Kode obat tidak ditemukan. Kode yang tersedia : ", data_kode)
  
             elif pilihan == "3":
-                nama_input = input("Masukkan nama obat: ").lower()
+                nama_input = validasi_nama()
                 found = False
                 for nama in data_obat:
                     if nama['nama'].lower() == nama_input:
@@ -183,12 +195,16 @@ def tampilkan_obat():
                     tampilan_tabel(data_obat)
 
         elif pilihan == "4":
-            break
+            if confirm_menuutama():
+                break
         else:
             print("Pilihan tidak valid.")
 
 def tambah_obat():
-    tampilan_tabel(data_obat)
+    # if not data_obat:
+    #     print("Data tidak ada")
+    #     return
+    # tampilan_tabel(data_obat)
     while True:
         print("\n---------------- Submenu Tambah Obat (2) ----------------")
         print("1. Tambah obat berdasarkan kode obat")
@@ -199,9 +215,10 @@ def tambah_obat():
             if autentikasi():
                 # kode_obat_input = int(input("Masukkan Kode Obat: "))
                 kode_obat_input = validasi_kodeobat()
+                data_kode = [obat['kode_obat'] for obat in data_obat]
                 for obat in data_obat: #--> cek jika obat sudah ada  
                     if obat["kode_obat"] == kode_obat_input:
-                        print("Data sudah ada. Masukkan kode lain")
+                        print("Data sudah ada", data_kode)
                         break #--> keluar dari loop jika obat sudah ada
                 else: #--> jika tidak ada index yg duplikat, lanjutkan input
                     # nama_obat_input = input("Nama Obat: ")
@@ -240,11 +257,15 @@ def tambah_obat():
                         # print("Data berhasil disimpan.")
                 
         elif pilihan == "2":
-            break
+            if confirm_menuutama():
+                break
         else:
             print("Pilihan tidak valid.")
 
 def ubah_obat():
+    # if not data_obat:
+    #     print("Data tidak ada")
+    #     return
     # tampilan_tabel(data_obat)
     while True:
         print("\n ---------------- Submenu Ubah Obat (3) ----------------")
@@ -256,7 +277,6 @@ def ubah_obat():
             if autentikasi():
                 # kode_obat_input = int(input("Masukkan Kode Obat yang ingin diubah: "))
                 kode_obat_input = validasi_kodeobat()
-                data_kode = [obat['kode_obat'] for obat in data_obat]
                 for obat in data_obat:
                     if obat['kode_obat'] == kode_obat_input:
                         tampilan_tabel([obat])
@@ -272,39 +292,46 @@ def ubah_obat():
                             if kolom in obat:
                                 if kolom == "jumlah":
                                     obat[kolom] = validasi_jumlah()
+                                    tampilan_tabel(data_obat)
+                                    print("Data berhasil diupdate.")
                                 elif kolom == "harga":
                                     obat[kolom] = validasi_harga()
+                                    tampilan_tabel(data_obat)
+                                    print("Data berhasil diupdate.")
                                 elif kolom == "tgl_kadaluwarsa":
                                     obat[kolom] = validasi_tanggal()
+                                    tampilan_tabel(data_obat)
+                                    print("Data berhasil diupdate.")
                                 elif kolom == "nama":
                                     nama = obat["nama"]
-                                    new_value = input(f"Masukkan nilai baru untuk {nama}:")
+                                    new_value = input(f"Masukkan nilai baru untuk {nama}: ").strip()
                                     for item in data_obat:
                                         if item["nama"].lower() == new_value.lower():
                                             print("Nama obat sudah ada. Silahkan masukkan nama lain")
                                             tampilan_tabel(data_obat)
                                             break
-                                    else: 
-                                        obat[kolom] = new_value
-                                        tampilan_tabel(data_obat)
-                                        print("Data berhasil diupdate.")
-                                        break
+                                        else: 
+                                            obat[kolom] = new_value
+                                            tampilan_tabel(data_obat)
+                                            print("Data berhasil diupdate.")
+                                            break
                             else:
                                 print("Kolom tidak ditemukan.")
                         else:
                             print("Data tidak diubah")
                         break
                 else:
-                    print("Obat tidak ditemukan. Kode obat yang tersedia", data_kode)
+                    print("Data tidak ada.")
         elif pilihan == "2":
-            break
+            if confirm_menuutama():
+                break
         else:
             print("Pilihan tidak valid.")
 
 def hapus_obat():
     # if not data_obat:
     #     print("Data tidak ada")
-        # return
+    #     return
     # tampilan_tabel(data_obat)
     while True:
         print("\n ---------------- Submenu Hapus Obat (4) ----------------")
@@ -329,9 +356,10 @@ def hapus_obat():
                             print("Penghapusan dibatalkan.")
                         break
                 else:
-                    print("data tidak ada. data yang tersedia kode", data_obat)
+                    print("data tidak ada.")
         elif pilihan == "2":
-            break
+            if confirm_menuutama():
+                break
         else: 
             print("Pilihan tidak valid")
 
@@ -340,7 +368,7 @@ def beli_obat():
             while True:
                 tampilan_tabel(data_obat)
                 # nama_obat_input = input("Masukkan nama obat yang ingin Anda beli:").lower()
-                nama_obat_input = validasi_nama()
+                nama_obat_input = validasi_nama_beli()
                 for obat in data_obat:
                     if obat['nama'].lower() == nama_obat_input.lower():
                         jumlah = validasi_jumlah()
