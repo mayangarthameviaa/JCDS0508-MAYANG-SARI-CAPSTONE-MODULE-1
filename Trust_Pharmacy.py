@@ -8,7 +8,7 @@ data_obat = [
     # {"no": 4, "kode_obat": "OB-04", "nama": "Amoxicillin", "harga": 12500, "jumlah": 30, "tgl_kadaluwarsa": date(2025, 10, 30)},
     # {"no": 5, "kode_obat": "OB-05", "nama": "Cetirizine", "harga": 8000, "jumlah": 65, "tgl_kadaluwarsa": date(2026, 7, 18)}
 #     {"no": 6, "kode_obat": "OB-06", "nama": "Vitamin C", "harga": 5000, "jumlah": 80, "tgl_kadaluwarsa": date(2025, 12, 30)},
-#     {"no": 7, "kode_obat": 6, "nama": "Metmorfin", "harga": 6500, "jumlah": 75, "tgl_kadaluwarsa": date(2026, 10, 10)},
+#     {"no": 7, "kode_obat": "OB-07", "nama": "Metmorfin", "harga": 6500, "jumlah": 75, "tgl_kadaluwarsa": date(2026, 10, 10)},
 #     {"no": 8, "kode_obat": 7, "nama": "Asam Mefenamat", "harga": 9000, "jumlah": 40, "tgl_kadaluwarsa": date(2025, 12, 30)},
 #     {"no": 9, "kode_obat": 8, "nama": "Ibu Profen", "harga": 10000, "jumlah": 65, "tgl_kadaluwarsa": date(2026, 7, 18)},
 #     {"no": 10, "kode_obat": 9, "nama": "Furosemide", "harga": 7500, "jumlah": 70, "tgl_kadaluwarsa": date(2026, 3, 27)},
