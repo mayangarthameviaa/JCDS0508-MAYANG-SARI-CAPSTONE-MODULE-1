@@ -13,29 +13,38 @@ data_obat = [
 keranjang_belanja = []
 
 def tampilan_tabel(data):
-    # if not data:
-    #     print("Data tidak ada.")
-    #     return
     for index, item in enumerate(data, start=1):
         item["no"] = index
     tabel_data = [[item["no"], item["kode_obat"], item["nama"], item["harga"], item["jumlah"], item["tgl_kadaluwarsa"]] for item in data]   
     print(tabulate(tabel_data, headers=data[0].keys(), tablefmt='fancy_grid', numalign="center", stralign="center",))
-    # print(tabulate(tabel_data, headers=["no", "kode_obat", "nama", "harga", "jumlah", "tgl_kadaluwarsa"], tablefmt='fancy_grid', numalign="center", stralign="center",))
 
 def autentikasi():
-    username = input("Masukkan username admin: ")
-    password = input("Masukkan password admin: ")
-    # if username == "Admin1" and password == "Pass1":
-    #     return True
-    # print("Username atau password salah.")
-    # return False
-    if username != "1":
-        print("Username Anda salah.")
-        return False
-    elif password != "1":
-        print("Password Anda salah.")
-        return False
-    return True
+    print(""" 
++-------------------------- + + + --------------------------+
+|                   Welcome to Trust Pharmacy               |
+|                      Your Wellnes Partner                 |
++-------------------------- + + + --------------------------+
+""")          
+    while True:
+        choose = input("Silahkan pilih peran Anda (admin atau user): ").lower().strip()
+        if choose == "admin":
+            username = input("Masukkan username Admin: ")
+            password = input("Masukkan password Admin: ")
+            if username == "Admin1" and password == "Pass1":
+                return "admin"
+            else:
+                print("Username atau password salah, silahkan coba lagi.")
+
+        elif choose == "user":
+            username = input("Masukkan username User: ")
+            password = input("Masukkan password User: ")
+            if username == "User1" and password == "Pass1":
+                return "user"
+            else:
+                print("Username atau password salah, silahkan coba lagi")
+
+        else:
+            print("Pilihan tidak valid. Silahkan masukkan 'admin' atau 'user'. ")
 
 def validasi_kodeobat():
     while True:
@@ -50,7 +59,7 @@ def validasi_kodeobat():
 
 def validasi_nama():
     while True:
-        nama_input = input("Masukkan nama obat: ").strip()
+        nama_input = input("Masukkan nama obat: ").lower().strip()
         if not nama_input:
             print("Input tidak boleh kosong.")
             continue
@@ -108,18 +117,16 @@ def validasi_tanggal():
 def tampilkan_keranjang():
     isi_keranjang = []
     for item in keranjang_belanja:
-        total_harga = item[1] * item[2]
-        isi_keranjang.append([item[0], item[1], item[2], total_harga])
+        total_harga = item["jumlah"] * item["harga"]
+        isi_keranjang.append([item["nama"], item["jumlah"], item["harga"], total_harga])
     print(tabulate(isi_keranjang, headers=["Nama Obat", "Qty", "Harga", "Total Harga"], tablefmt='fancy_grid', numalign="center", stralign="center"))
 
 def proses_belanja():
     total_belanja = 0
     for item in keranjang_belanja:
-        jumlah = item[1]
-        harga = item[2]
-        total_belanja = total_belanja + (jumlah * harga)
-    # total_belanja = sum(item[1]*item[2] for item in keranjang_belanja)
+        total_belanja += item["jumlah"] * item["harga"]
     print(f"Total belanja Anda Rp. {total_belanja}")
+
     while True:
         jumlah_uang = int(input("Masukkan jumlah uang Anda: "))
         if jumlah_uang < total_belanja:
@@ -127,7 +134,7 @@ def proses_belanja():
             print(f"Uang Anda kurang sebesar Rp.{kekurangan}.")
         elif jumlah_uang > total_belanja:
             kembalian = jumlah_uang - total_belanja
-            print(f"Terima kasih telah berbelanja, kembalian uang Anda Rp {kembalian}")
+            print(f"Terima kasih telah berbelanja, kembalian uang Anda Rp. {kembalian}")
             break
         else:
             print("Terima kasih telah berbelanja")
@@ -136,8 +143,8 @@ def proses_belanja():
 def kurangi_stok():
     for item in keranjang_belanja:
         for obat in data_obat:
-            if item[0] == obat["nama"]:
-                obat["jumlah"] -= item[1]
+            if item["nama"] == obat["nama"]:
+                obat["jumlah"] -= item["jumlah"]
     keranjang_belanja.clear()
 
 def confirm_menuutama():
@@ -149,14 +156,17 @@ def confirm_menuutama():
             return False
         else:
             print("Input tidak valid. Silahkan masukkan 'ya' atau 'tidak' ")
+
+# ------------------------------------ MENU 1 ------------------------------------
 def tampilkan_obat():
     while True:
-        print("\n--------------- Submenu Tampilkan Obat (1) ---------------")
-        print("1. Tampilkan seluruh obat")
-        print("2. Tampilkan berdasarkan kode obat")
-        print("3. Tampilkan berdasarkan nama obat")
-        print("4. Kembali ke menu utama")
-        print("-----------------------------------------------------------")
+        print("\n-------------------  ✦ Submenu Tampilkan Obat ✦ -----------------")
+        print("1. Tampilkan seluruh obat                                           ")
+        print("2. Tampilkan berdasarkan kode obat                                  ")
+        print("3. Tampilkan berdasarkan nama obat                                  ")
+        print("4. Kembali ke menu utama                                            ")
+        print("-----------------------------------------------------------------")
+
         pilihan = input("Silahkan pilih menu yang Anda inginkan (1-4): ")
         if pilihan == "1":
             if data_obat:
@@ -171,7 +181,6 @@ def tampilkan_obat():
 
             if pilihan == "2":
                 data_kode = [obat['kode_obat'] for obat in data_obat]
-                # kode_obat_input = int(input("Masukkan kode obat: "))
                 kode_obat_input = validasi_kodeobat()
                 found = False #-> penanda apakah obat telah ditemukan
                 for obat in data_obat:
@@ -200,28 +209,22 @@ def tampilkan_obat():
         else:
             print("Pilihan tidak valid.")
 
+# ------------------------------------ MENU 2 ------------------------------------
 def tambah_obat():
-    # if not data_obat:
-    #     print("Data tidak ada")
-    #     return
-    # tampilan_tabel(data_obat)
     while True:
-        print("\n---------------- Submenu Tambah Obat (2) ----------------")
+        print("\n-------------------  ✦ Submenu Tambah Obat ✦ -------------------")
         print("1. Tambah obat berdasarkan kode obat")
         print("2. kembali ke menu utama")
-        print("-----------------------------------------------------------")
+        print("-------------------------------------------------------------------")
         pilihan = input("Silahkan pilih menu yang Anda inginkan (1-2): ")
         if pilihan == "1": 
-            if autentikasi():
-                # kode_obat_input = int(input("Masukkan Kode Obat: "))
                 kode_obat_input = validasi_kodeobat()
                 data_kode = [obat['kode_obat'] for obat in data_obat]
                 for obat in data_obat: #--> cek jika obat sudah ada  
                     if obat["kode_obat"] == kode_obat_input:
-                        print("Data sudah ada", data_kode)
+                        print("Data sudah ada, data kode obat saat ini yaitu: ", data_kode)
                         break #--> keluar dari loop jika obat sudah ada
                 else: #--> jika tidak ada index yg duplikat, lanjutkan input
-                    # nama_obat_input = input("Nama Obat: ")
                     nama_obat_input = validasi_nama()
                     for nama in data_obat:
                         if nama["nama"].lower() == nama_obat_input.lower():
@@ -251,10 +254,6 @@ def tambah_obat():
                             print("Data berhasil disimpan.")
                         else:
                             print("Data tidak disimpan.")
-                        
-                        # data_obat.append(obat_baru)
-                        # tampilan_tabel(data_obat)
-                        # print("Data berhasil disimpan.")
                 
         elif pilihan == "2":
             if confirm_menuutama():
@@ -262,20 +261,15 @@ def tambah_obat():
         else:
             print("Pilihan tidak valid.")
 
+# ------------------------------------ MENU 3 ------------------------------------
 def ubah_obat():
-    # if not data_obat:
-    #     print("Data tidak ada")
-    #     return
-    # tampilan_tabel(data_obat)
     while True:
-        print("\n ---------------- Submenu Ubah Obat (3) ----------------")
+        print("\n-------------------  ✦ Submenu Ubah Obat ✦ -------------------")
         print("1. Ubah obat berdasarkan kode obat")
         print("2. kembali ke menu utama")
-        print("-----------------------------------------------------------")
+        print("-----------------------------------------------------------------")
         pilihan = input("Silahkan pilih menu yang Anda inginkan (1-2): ")
         if pilihan == "1": 
-            if autentikasi():
-                # kode_obat_input = int(input("Masukkan Kode Obat yang ingin diubah: "))
                 kode_obat_input = validasi_kodeobat()
                 for obat in data_obat:
                     if obat['kode_obat'] == kode_obat_input:
@@ -322,28 +316,23 @@ def ubah_obat():
                         break
                 else:
                     print("Data tidak ada.")
+                    
         elif pilihan == "2":
             if confirm_menuutama():
                 break
         else:
             print("Pilihan tidak valid.")
 
+# ------------------------------------ MENU 4 ------------------------------------
 def hapus_obat():
-    # if not data_obat:
-    #     print("Data tidak ada")
-    #     return
-    # tampilan_tabel(data_obat)
     while True:
-        print("\n ---------------- Submenu Hapus Obat (4) ----------------")
+        print("\n-------------------  ✦ Submenu Hapus Obat ✦ -------------------")
         print("1. Hapus obat berdasarkan kode obat")
         print("2. kembali ke menu utama")
-        print("-----------------------------------------------------------")
+        print("------------------------------------------------------------------")
         pilihan = input("Silahkan pilih menu yang Anda inginkan (1-2): ")
         if pilihan == "1": 
-            if autentikasi():
-                # kode_obat_input = int(input("Masukkan Kode Obat yang ingin dihapus: "))
                 kode_obat_input = validasi_kodeobat()
-                data_kode = [obat['kode_obat'] for obat in data_obat]
                 for obat in data_obat:
                     if obat['kode_obat'] == kode_obat_input:
                         tampilan_tabel([obat])
@@ -363,20 +352,26 @@ def hapus_obat():
         else: 
             print("Pilihan tidak valid")
 
+# ------------------------------------ MENU 5 ------------------------------------
 def beli_obat():
         if data_obat:
             while True:
                 tampilan_tabel(data_obat)
-                # nama_obat_input = input("Masukkan nama obat yang ingin Anda beli:").lower()
                 nama_obat_input = validasi_nama_beli()
                 for obat in data_obat:
                     if obat['nama'].lower() == nama_obat_input.lower():
                         jumlah = validasi_jumlah()
-                        # jumlah = int(input("Jumlah: "))
                         if jumlah > obat["jumlah"]:
                             print(f"stok {nama_obat_input} tidak cukup. Stok tersedia {obat["jumlah"]}.")
                         else:
-                            keranjang_belanja.append([obat['nama'], jumlah, obat['harga']])
+                            # keranjang_belanja.append([obat['nama'], jumlah, obat['harga']])
+                            # print(f"{jumlah} {nama_obat_input} ditambahkan ke keranjang")
+                            # tampilkan_keranjang()
+                            keranjang_belanja.append({
+                                "nama" : obat["nama"],
+                                "jumlah" : jumlah,
+                                "harga" : obat["harga"]
+                            })
                             print(f"{jumlah} {nama_obat_input} ditambahkan ke keranjang")
                             tampilkan_keranjang()
                              
@@ -393,6 +388,7 @@ def beli_obat():
         else: 
             print("Tidak ada obat yang tersedia untuk dibeli")
 
+#------------------------------------ MENU 6 ------------------------------------
 def keluar():
     confirm = input("Apakah Anda yakin ingin keluar dari program? (ya/tidak): ").lower()
     if confirm == "ya":
@@ -401,20 +397,21 @@ def keluar():
     else: 
         return False 
 
-def main_menu():
+# ------------------------ MENU UTAMA ADMIN------------------------
+def menu_admin():
     while True:
-        print("----------------------- ⁠⚕️⚕️⚕️  ⁠------------------------")
-        print("                Welcome to Trust Pharmacy               ")
-        print("----------------------- ⁠⚕️⚕️⚕️  ⁠------------------------")
+        print("----------------------- ⁠⚕️  ✚ ⁠⚕️ -----------------------")
+        print("                     'Trust Pharmacy'                    ")
+        print("                      Admin Session                      ")
+        print("----------------------- ⁠⚕️  ✚ ⚕️ -----------------------")
         print(" 1. Tampilkan Obat")
-        print(" 2. Tambah Obat (Admin)")
-        print(" 3. Ubah Obat (Admin)")
-        print(" 4. Hapus Obat (Admin)")
-        print(" 5. Beli Obat")
-        print(" 6. Exit")
+        print(" 2. Tambah Obat")
+        print(" 3. Ubah Obat")
+        print(" 4. Hapus Obat")
+        print(" 5. Exit")
         print("-----------------------------------------------------")
 
-        pilihan = input("Silahkan pilih menu yang Anda inginkan (1-6): ")
+        pilihan = input("Silahkan pilih menu yang Anda inginkan (1-5): ")
 
         if pilihan == "1":
             tampilkan_obat()
@@ -425,11 +422,39 @@ def main_menu():
         elif pilihan == "4":
             hapus_obat()
         elif pilihan == "5":
-            beli_obat()
-        elif pilihan == "6":
             if keluar():
                 break
         else:
             print("Pilihan Anda tidak valid, silahkan coba lagi (1-6).")
 
+# ------------------------ MENU UTAMA USER------------------------
+def menu_user():
+    while True:
+        print("----------------------- ⁠⚕️  ✚ ⚕️  ⁠------------------------")
+        print("                      Trust Pharmacy                       ")
+        print("----------------------- ⁠⚕️  ✚ ⚕️  ⁠------------------------")
+        print(" 1. Tampilkan Obat")
+        print(" 2. Beli Obat")
+        print(" 3. Exit")
+        print("---------------------------------------------------------")
+
+        pilihan = input("Silahkan pilih menu yang Anda inginkan (1-3): ")
+
+        if pilihan == "1":
+            tampilkan_obat()
+        elif pilihan == "2":
+            beli_obat()
+        elif pilihan == "3":
+            if keluar():
+                break
+        else:
+            print("Pilihan Anda tidak valid, silahkan coba lagi (1-6).")
+
+def main_menu():
+    pengguna = autentikasi()
+    if pengguna == "admin":
+        menu_admin()
+    else:
+        menu_user()
+        
 main_menu()
