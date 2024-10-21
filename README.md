@@ -5,13 +5,21 @@
 Trust Pharmacy is a medication management system that allows users to display and purchase medications, as well as enables Admin to display, add, modify, and delete medications.
 
 ## Notes
+The authentication for admin is: 
 
-**Username**: admin1
-**Password**: pass1
+**username: Admin1**
+**password: Pass1**
+
+While for the user is: 
+
+**username: User1**
+**password: Pass1**
+
 
 ## Key Features
 
 1. **Display Medications (Admin and User) →** View all available medications, including information such as code, name, price, quantity, and expiration date.
+
    **Special Features:**
 
    - Display all medications
@@ -20,27 +28,32 @@ Trust Pharmacy is a medication management system that allows users to display an
    - Return to the main features
 
 2. **Add Medication (Admin) →** Admin can add new medications to the system.
+
    **Special Features:**
 
    - Add new medications based on medication code without allowing data redundancy
-   - Return to the main features
+   - Return to the main features.
 
 3. **Modify Medication (Admin) →** Admin can modify existing medication information.
+
    **Special Features:**
 
-   - Modify medication data based on medication code
+   - Modify medication data based on medication code.
    - Columns that can be modified include name, quantity, price, and expiration date; however, the number and medication code columns cannot be changed.
 
 4. **Delete Medication (Admin) →** Admin can delete medications from the system.
+
    **Special Features:**
 
-   - Delete medication data based on medication code
+   - Delete medication data based on medication code.
 
-5. **Purchase Medication →** Users can purchase medications.
+5. **Purchase Medication (User) →** Users can purchase medications.
+
    **Special Features:**
+
    - Purchase medications based on the name
    - If the medication is available, it will be added to the shopping cart, and the total amount will be displayed.
-   - Upon successful purchase, the medication will...
+   - When the medication is successfully purchased, the stock of medication will decrease.
 
 ## Prerequisites
 
@@ -57,5 +70,6 @@ Trust Pharmacy is a medication management system that allows users to display an
    ```
 
 ## Contact
+
 - GitHub: mayangarthameviaa
 - Email: mayangarthameviaa@gmail.com
